@@ -19,7 +19,6 @@ public class DelayedToastIntentService extends IntentService {
     @SuppressWarnings("deprecation")
     final Handler mHandler = new Handler();
     private int period;
-    private final int TRENTE_SECONDES = 30;
 
     public DelayedToastIntentService() {
         super("name");
@@ -27,36 +26,38 @@ public class DelayedToastIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        period = intent.getIntExtra("period", 10);
-        Log.i(TAG, "onHandleIntent, period = " + String.valueOf(period));
+        if (intent != null) {
+            period = intent.getIntExtra("period", 10);
+        }
+        Log.i(TAG, "onHandleIntent, period = " + period);
 
         /** Question 1 */
 //         toast();
 
         /** Question 2 */
+//        if (intent != null) {
 //            messenger(intent);
+//        }
 
         /** Question 3 */
+        int TRENTE_SECONDES = 30;
         if (period > TRENTE_SECONDES){
             alert();
         }else {
-            messenger(intent);
+            if (intent != null) {
+                messenger(intent);
+            }
         }
 
     }
 
     void toast() {
-        SystemClock.sleep(period * 1000);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "délai écoulé: " + period, Toast.LENGTH_SHORT).show();
-            }
-        });
+        SystemClock.sleep(period * 1000L);
+        mHandler.post(() -> Toast.makeText(getApplicationContext(), "délai écoulé: " + period, Toast.LENGTH_SHORT).show());
     }
 
     void messenger(Intent intent){
-        SystemClock.sleep(period * 1000);
+        SystemClock.sleep(period * 1000L);
         Bundle extras = intent.getExtras();
         Messenger messager = (Messenger) extras.get("messager");
         Message msg = Message.obtain();
@@ -71,14 +72,11 @@ public class DelayedToastIntentService extends IntentService {
     }
 
     void alert(){
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getApplicationContext(), AlertDialogActivity.class);
-                intent.putExtra("period", period);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
+        mHandler.post(() -> {
+            Intent intent = new Intent(getApplicationContext(), AlertDialogActivity.class);
+            intent.putExtra("period", period);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         });
     }
 }

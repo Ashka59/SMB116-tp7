@@ -2,7 +2,6 @@ package cnam.smb116.smb116_tp7;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -21,11 +20,7 @@ public class AlertDialogActivity extends Activity {
                 .setTitle("Alerte en question 3 du tp7/SMB116")
                 .setMessage("votre délai excède 30 secondes (" + period + ") sec.)")
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        AlertDialogActivity.this.finish();
-                    }
-                });
+                .setPositiveButton("OK", (dialog, id) -> AlertDialogActivity.this.finish());
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }

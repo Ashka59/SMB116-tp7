@@ -1,5 +1,6 @@
 package cnam.smb116.smb116_tp7;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private EditText inputTxt;
-    private int time;
     private Handler handler;
 
     @Override
@@ -24,18 +24,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.inputTxt = findViewById(R.id.editTextNumber);
 
-        /** Qustion 2 */
+        /** Question 2 */
         configureHandler();
     }
 
     public void onClickStart(View view) {
         Intent intent = new Intent(this, DelayedToastIntentService.class);
+        int time;
         if (inputTxt.getText().toString().equals("")){
             time = 0;
         }else {
             time = Integer.parseInt(String.valueOf(inputTxt.getText()));
         }
-        Log.i(TAG, "onClickStart , time = "+time);
+        Log.i(TAG, "onClickStart , time = "+ time);
         intent.putExtra("period", time);
 
         /** Question 2 */
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
+    @SuppressLint("HandlerLeak")
     public void configureHandler(){
         handler = new Handler() {
             public void handleMessage(Message message) {
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     int period = extras.getInt("period");
                     Toast.makeText(getApplicationContext(),"délai écoulé "+period,Toast.LENGTH_LONG).show();
                 }
-            };
+            }
         };
     }
 }
